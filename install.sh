@@ -282,6 +282,8 @@ DOT_SHURROO="${USER_HOME}""/.shurroo"
 SHURROO_REPO="${DOT_SHURROO}""/shurroo"
 SHURROO_GIT="${SHURROO_REPO}""/.git"
 SHURROO_GIT_REMOTE="https://github.com/shurroo/shurroo"
+ANSIBLE_ROLES="${DOT_SHURROO}""/roles"
+ANSIBLE_COLLECTIONS="${DOT_SHURROO}""/collections"
 
 should_install_shurroo() {
   ! [[ -d "${SHURROO_GIT}" ]]
@@ -395,6 +397,15 @@ execute "git" "fetch" "--force" "origin"
 execute "git" "fetch" "--force" "--tags" "origin"
 # Reset
 execute "git" "reset" "--hard" "origin/master"
+
+# Create working directories
+cd "${DOT_SHURROO}" >/dev/null
+execute "${MKDIR[@]}" "${ANSIBLE_ROLES}"
+execute "${MKDIR[@]}" "${ANSIBLE_COLLECTIONS}"
+
+# Create working copy of ansible configuration and role requirements
+execute cp "${SHURROO_REPO}""/files/ansible.cfg" "${DOT_SHURROO}" >/dev/null 2>&1
+execute cp "${SHURROO_REPO}""/files/requirements.yml" "${DOT_SHURROO}" >/dev/null 2>&1
 
 if [[ -n "${INSTALL_SHURROO-}" ]]
 then
