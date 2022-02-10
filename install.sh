@@ -407,6 +407,9 @@ execute "${MKDIR[@]}" "${ANSIBLE_COLLECTIONS}"
 execute cp "${SHURROO_REPO}""/files/ansible.cfg" "${DOT_SHURROO}" >/dev/null 2>&1
 execute cp "${SHURROO_REPO}""/files/requirements.yml" "${DOT_SHURROO}" >/dev/null 2>&1
 
+# Link shurroo script
+execute ln "-shf" "${SHURROO_REPO}""/shuroo/shurroo.sh" "${USER_HOME}""/shurroo"
+
 if [[ -n "${INSTALL_SHURROO-}" ]]
 then
   ohai "Shurroo repository installation successful!"
