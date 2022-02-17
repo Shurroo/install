@@ -282,6 +282,7 @@ DOT_SHURROO="${USER_HOME}""/.shurroo"
 SHURROO_REPO="${DOT_SHURROO}""/shurroo"
 SHURROO_GIT="${SHURROO_REPO}""/.git"
 SHURROO_GIT_REMOTE="https://github.com/shurroo/shurroo"
+SHURROO_LOG="${DOT_SHURROO}""/log"
 ANSIBLE_ROLES="${DOT_SHURROO}""/roles"
 ANSIBLE_COLLECTIONS="${DOT_SHURROO}""/collections"
 
@@ -402,6 +403,7 @@ execute "git" "reset" "--hard" "origin/master"
 cd "${DOT_SHURROO}" >/dev/null
 execute "${MKDIR[@]}" "${ANSIBLE_ROLES}"
 execute "${MKDIR[@]}" "${ANSIBLE_COLLECTIONS}"
+execute "${MKDIR[@]}" "${SHURROO_LOG}"
 
 # Create working copy of ansible configuration and role requirements
 execute cp "${SHURROO_REPO}""/files/ansible.cfg" "${DOT_SHURROO}" >/dev/null 2>&1
