@@ -399,6 +399,33 @@ execute "git" "fetch" "--force" "--tags" "origin"
 # Reset
 execute "git" "reset" "--hard" "origin/master"
 
+
+# Install Homebrew
+printf "Installing Homebrew\n"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install Ansible
+printf "Installing Ansible\n"
+brew install ansible
+cd ~/.shurroo
+if [[ -f "/Volumes/Shurroo/requirements.yml" ]]
+then
+  printf "Installing Ansible roles from custom requirements file\n"
+  ansible-galaxy install -f -r /Volumes/Shurroo/requirements.yml
+else
+  printf "Installing Ansible roles from Shurroo default requirements file\n"
+  ansible-galaxy install -f -r requirements.yml
+fi
+
+# No '[' or 'test' needed because we are using the return code of the check
+if ls -1qA ~/.shurroo/shurroo/modules/ | grep -q \.py
+then
+  printf "Installing Ansible modules\n"
+  mkdir -p ~/.ansible/plugins/modules/
+  cp ~/.shurroo/shurroo/modules/*.py ~/.ansible/plugins/modules/
+fi
+
+
 # Create working directories
 cd "${DOT_SHURROO}" >/dev/null
 execute "${MKDIR[@]}" "${ANSIBLE_ROLES}"
