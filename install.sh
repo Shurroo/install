@@ -434,6 +434,23 @@ fi
 #   x  exit the ex editor
 execute ex "-sc" '%s~'"${PYTHON_KEY}"' = '"${PYTHON_DEFAULT}"'~'"${PYTHON_KEY}"' = '"${PYTHON_CELLAR[0]}"'~|x' "ansible.cfg"
 
+# Find the default module path and copy our plist module
+MODULE_PATH=$(ansible-config dump | grep DEFAULT_MODULE_PATH | tr -d "[]'," | cut -f 3 -d " ")
+# Check we actually got a path - at least the first component should already exist
+ROOT_DIR=$(printf "%s" $MODULE_PATH | cut -f 2 -d "/")
+if [[ ! -d "/$ROOT_DIR" ]]
+then
+  abort "Could not get Ansible module path"
+fi
+execute "${MKDIR[@]}" "${MODULE_PATH}"
+execute cp "${SHURROO_REPO}/modules/plist.py" "${MODULE_PATH}"
+# Verify Ansible can find our plist module
+ansible localhost -m plist >/dev/null 2>&1
+if [[ "$?" -ne "0" ]]
+then
+  abort " Could not install plist module"
+fi
+
 # If we find a user binary folder in the path, link there, else link to the user home folder
 USER_PATH=$(printf "%s" "$PATH")
 USER_BINARY_FOLDER="/usr/local/bin"
